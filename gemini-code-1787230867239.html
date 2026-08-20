@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Rotina de Embocadura</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --accent: #38bdf8;
+      --accent-hover: #0284c7;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --success: #22c55e;
+      --danger: #ef4444;
+      --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-family);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+    }
+    .app-container {
+      width: 100%;
+      max-width: 440px;
+      background: var(--card-bg);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: 12px;
+    }
+    .header h1 { font-size: 1.1rem; font-weight: 700; color: var(--accent); }
+    .day-badge {
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+    }
+    .exercise-header { text-align: center; }
+    .phase-badge {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+    .exercise-title { font-size: 1.35rem; font-weight: 700; margin-bottom: 4px; }
+    .step-indicator { font-size: 0.8rem; color: var(--text-muted); }
+    .timer-display {
+      font-size: 3.8rem;
+      font-weight: 800;
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+      color: var(--text);
+      margin: 8px 0;
+    }
+    .timer-progress {
+      width: 100%;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .progress-bar {
+      height: 100%;
+      background: var(--accent);
+      width: 100%;
+      transition: width 0.3s linear;
+    }
+    .description-box {
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 12px;
+      padding: 14px;
+      font-size: 0.92rem;
+      line-height: 1.45;
+      color: #e2e8f0;
+      max-height: 160px;
+      overflow-y: auto;
+    }
+    .controls { display: flex; gap: 10px; }
+    .btn {
+      flex: 1;
+      border: none;
+      border-radius: 14px;
+      padding: 14px 0;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: opacity 0.15s ease;
+    }
+    .btn:active { opacity: 0.8; }
+    .btn-primary { background: var(--accent); color: #000; }
+    .btn-pause { background: var(--danger); color: #fff; }
+    .btn-secondary { background: rgba(255, 255, 255, 0.1); color: var(--text); }
+    .nav-buttons { display: flex; justify-content: space-between; gap: 10px; margin-top: 4px; }
+    .btn-sm { padding: 10px; font-size: 0.85rem; border-radius: 10px; }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <div class="header">
+      <h1>Embocadura Routine</h1>
+      <button id="dayBadge" class="day-badge" onclick="toggleDay()"></button>
+    </div>
+
+    <div class="exercise-header">
+      <div id="exercisePhase" class="phase-badge"></div>
+      <div id="exerciseTitle" class="exercise-title"></div>
+      <div id="stepIndicator" class="step-indicator"></div>
+    </div>
+
+    <div class="timer-display" id="timerDisplay">00:00</div>
+    <div class="timer-progress">
+      <div id="progressBar" class="progress-bar"></div>
+    </div>
+
+    <div class="description-box" id="exerciseDescription"></div>
+
+    <div class="controls">
+      <button id="mainBtn" class="btn btn-primary" onclick="toggleTimer()">Iniciar</button>
+      <button class="btn btn-secondary" onclick="resetTimer()">Reiniciar</button>
+    </div>
+
+    <div class="nav-buttons">
+      <button class="btn btn-secondary btn-sm" onclick="prevExercise()">← Anterior</button>
+      <button class="btn btn-secondary btn-sm" onclick="nextExercise()">Próximo →</button>
+    </div>
+  </div>
+
+  <script>
+    const routineData = {
+      par: [
+        {
+          fase: "Resistência",
+          nome: "Firmeza dos Cantos",
+          tempoMin: 5,
+          desc: "Forme sua embocadura padrão e trave os cantos com firmeza. Mantenha essa posição até os cantos começarem a queimar. Passo crucial: Assim que sentir a queimação, lute para manter a posição por mais 1 a 2 minutos. Descanse e repita."
+        },
+        {
+          fase: "Carga",
+          nome: "O Exercício do Lápis",
+          tempoMin: 5,
+          desc: "Feche os dentes. Coloque a extremidade plana e sem ponta de um lápis de madeira contra eles. Envolva o lápis com os lábios e mantenha-o reto para a frente usando apenas os músculos dos lábios. Segure até a falha absoluta. Descanse e repita."
+        },
+        {
+          fase: "Tensão",
+          nome: "Sustentação com Separação",
+          tempoMin: 3,
+          desc: "Feche os dentes, pressione os lábios firmemente um contra o outro sem morder. Mantenha os cantos travados e os lábios selados, depois separe os dentes o máximo possível dentro da boca. Sustente esse alongamento extremo até que a fadiga quebre o selamento dos lábios."
+        },
+        {
+          fase: "Foco",
+          nome: "O Bico de Cordão",
+          tempoMin: 2,
+          desc: "Empurre os lábios para fora em um bico exagerado. Concentre a energia para dentro, como se estivesse segurando um objeto minúsculo (um efeito de cordão apertado). Segure até a falha."
+        }
+      ],
+      impar: [
+        {
+          fase: "Ativação",
+          nome: "Isometria no Espelho",
+          tempoMin: 3,
+          desc: "A) Role o lábio inferior para fora em direção ao queixo, segure por 10s, volte à posição inicial. B) Projete os lábios para frente (fazendo bico), segure por 10s. C) Role os lábios para dentro sobre os dentes até que a parte vermelha desapareça, segure por 10s. Repita o ciclo por 3 minutos."
+        },
+        {
+          fase: "Resistência",
+          nome: "Puxada para Baixo com o Dedo",
+          tempoMin: 4,
+          desc: "Coloque o dedo indicador no lábio inferior. Pressione o lábio sobre os dentes inferiores e puxe para baixo. Resista a esse movimento levantando ativamente o lábio inferior para cima e afastando-o dos dentes usando os músculos faciais. Mantenha a resistência por 30 a 40 segundos. Descanse e repita."
+        },
+        {
+          fase: "Velocidade / Queimação",
+          nome: "Falha de Bico e Sorriso",
+          tempoMin: 4,
+          desc: "Faça o bico mais exagerado e concentrado possível e, em seguida, mude instantaneamente para o sorriso mais largo que conseguir. Alterne o mais rápido possível até os músculos queimarem completamente. Descanse 30s, repita."
+        },
+        {
+          fase: "Isolamento",
+          nome: "O Abraço Interno de 'Mmm'",
+          tempoMin: 4,
+          desc: "Mantenha os lábios fechados (fazendo 'mmm'). Puxe os músculos dos lábios para dentro em direção ao centro, como se estivessem 'abraçando' os dentes. Mantenha os cantos da boca completamente neutros (sem sorrir ou fazer expressão de tristeza). Segure até sentir a queimação do ácido lático, descanse e repita."
+        }
+      ]
+    };
+
+    let currentDayMode = new Date().getDate() % 2 === 0 ? "par" : "impar";
+    let currentIndex = 0;
+    let totalSeconds = 0;
+    let remainingSeconds = 0;
+    let timerInterval = null;
+    let audioCtx = null;
+
+    function playBeep(freq = 880, duration = 0.2, count = 1) {
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        let delay = 0;
+        for (let i = 0; i < count; i++) {
+          setTimeout(() => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.frequency.value = freq;
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+            osc.stop(audioCtx.currentTime + duration);
+          }, delay * 1000);
+          delay += duration + 0.1;
+        }
+      } catch (e) {}
+    }
+
+    function formatTime(sec) {
+      const m = Math.floor(sec / 60).toString().padStart(2, '0');
+      const s = (sec % 60).toString().padStart(2, '0');
+      return `${m}:${s}`;
+    }
+
+    function updateUI() {
+      const list = routineData[currentDayMode];
+      const ex = list[currentIndex];
+
+      document.getElementById("dayBadge").textContent = currentDayMode === "par" ? "Dia Par (Hoje)" : "Dia Ímpar (Hoje)";
+      document.getElementById("exercisePhase").textContent = `Fase: ${ex.fase}`;
+      document.getElementById("exerciseTitle").textContent = ex.nome;
+      document.getElementById("stepIndicator").textContent = `Exercício ${currentIndex + 1} de ${list.length}`;
+      document.getElementById("exerciseDescription").textContent = ex.desc;
+
+      document.getElementById("timerDisplay").textContent = formatTime(remainingSeconds);
+      const progressPercent = totalSeconds > 0 ? (remainingSeconds / totalSeconds) * 100 : 0;
+      document.getElementById("progressBar").style.width = `${progressPercent}%`;
+
+      const mainBtn = document.getElementById("mainBtn");
+      if (timerInterval) {
+        mainBtn.textContent = "Pausar";
+        mainBtn.className = "btn btn-pause";
+      } else {
+        mainBtn.textContent = remainingSeconds === totalSeconds ? "Iniciar" : "Continuar";
+        mainBtn.className = "btn btn-primary";
+      }
+    }
+
+    function loadExercise(index) {
+      clearInterval(timerInterval);
+      timerInterval = null;
+      currentIndex = index;
+      const ex = routineData[currentDayMode][currentIndex];
+      totalSeconds = ex.tempoMin * 60;
+      remainingSeconds = totalSeconds;
+      updateUI();
+    }
+
+    function toggleTimer() {
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      } else {
+        if (remainingSeconds <= 0) return;
+        timerInterval = setInterval(() => {
+          remainingSeconds--;
+          updateUI();
+          if (remainingSeconds <= 0) {
+            clearInterval(timerInterval);
+            timerInterval = null;
+            playBeep(980, 0.25, 3);
+            if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+            updateUI();
+          }
+        }, 1000);
+      }
+      updateUI();
+    }
+
+    function resetTimer() {
+      clearInterval(timerInterval);
+      timerInterval = null;
+      const ex = routineData[currentDayMode][currentIndex];
+      totalSeconds = ex.tempoMin * 60;
+      remainingSeconds = totalSeconds;
+      updateUI();
+    }
+
+    function nextExercise() {
+      const list = routineData[currentDayMode];
+      if (currentIndex < list.length - 1) {
+        loadExercise(currentIndex + 1);
+      }
+    }
+
+    function prevExercise() {
+      if (currentIndex > 0) {
+        loadExercise(currentIndex - 1);
+      }
+    }
+
+    function toggleDay() {
+      currentDayMode = currentDayMode === "par" ? "impar" : "par";
+      loadExercise(0);
+    }
+
+    // Inicialização
+    loadExercise(0);
+  </script>
+</body>
+</html>
