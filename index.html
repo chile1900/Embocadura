@@ -133,6 +133,14 @@
     
     .nav-buttons { display: flex; justify-content: space-between; gap: 10px; margin-top: 0; }
     .btn-sm { padding: clamp(8px, 1.8vh, 10px); font-size: 0.85rem; border-radius: 10px; }  
+    .footer-tag {
+      text-align: center;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+      opacity: 0.6;
+      letter-spacing: 0.03em;
+    }
   </style>
 </head>
 <body>
@@ -168,6 +176,9 @@
       <button class="btn btn-secondary btn-sm" onclick="prevExercise()">← Anterior</button>
       <button class="btn btn-secondary btn-sm" onclick="nextExercise()">Próximo →</button>
     </div>
+    <div class="footer-tag">- Para os meus alunos de saxofone.<br>Desenvolvido por Filipe Nader</div>
+
+  </div>
   </div>
 
   <script>
