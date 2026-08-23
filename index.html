@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Rotina de Embocadura v4 </title>
   <style>
-    :root {
+   :root {
       --bg: #0f172a;
       --card-bg: #1e293b;
       --accent: #38bdf8;
@@ -17,35 +17,43 @@
       --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    
     body {
       background-color: var(--bg);
       color: var(--text);
       font-family: var(--font-family);
-      min-height: 100vh;
+      height: 100dvh; /* MÁGICA 1: Lê a altura real da tela ignorando a barra do navegador */
+      overflow: hidden; /* MÁGICA 2: Trava o site, impedindo a rolagem da página */
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 16px;
+      padding: 12px;
     }
+    
     .app-container {
       width: 100%;
       max-width: 440px;
+      height: 100%; /* Força a caixa a usar toda a altura disponível */
+      max-height: 750px; /* Evita que fique muito esticado em celulares muito grandes */
       background: var(--card-bg);
       border-radius: 24px;
-      padding: 24px;
+      padding: clamp(16px, 3vh, 24px); /* O preenchimento encolhe em telas pequenas */
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      justify-content: space-between; /* Espalha os botões, textos e timer perfeitamente */
+      gap: clamp(8px, 2vh, 16px);
     }
+    
     .header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      padding-bottom: 12px;
+      padding-bottom: 8px;
     }
-    .header h1 { font-size: 1.1rem; font-weight: 700; color: var(--accent); }
+    
+    .header h1 { font-size: clamp(1rem, 2.5vh, 1.1rem); font-weight: 700; color: var(--accent); }
     .day-badge {
       background: rgba(56, 189, 248, 0.15);
       color: var(--accent);
@@ -56,24 +64,27 @@
       cursor: pointer;
       border: 1px solid rgba(56, 189, 248, 0.3);
     }
+    
     .exercise-header { text-align: center; }
     .phase-badge {
       font-size: 0.75rem;
       text-transform: uppercase;
       letter-spacing: 0.08em;
       color: var(--text-muted);
-      margin-bottom: 4px;
+      margin-bottom: 2px;
     }
-    .exercise-title { font-size: 1.35rem; font-weight: 700; margin-bottom: 4px; }
+    .exercise-title { font-size: clamp(1.15rem, 3vh, 1.35rem); font-weight: 700; margin-bottom: 2px; }
     .step-indicator { font-size: 0.8rem; color: var(--text-muted); }
+    
     .timer-display {
-      font-size: 3.8rem;
+      font-size: clamp(3rem, 8vh, 3.8rem); /* O número do timer diminui se a tela for pequena */
       font-weight: 800;
       text-align: center;
       font-variant-numeric: tabular-nums;
       color: var(--text);
-      margin: 8px 0;
+      margin: 0;
     }
+    
     .timer-progress {
       width: 100%;
       height: 8px;
@@ -87,21 +98,25 @@
       width: 100%;
       transition: width 0.3s linear;
     }
-   .description-box {
-  background: rgba(0, 0, 0, 0.25);
-  border-radius: 12px;
-  padding: 14px;
-  font-size: 0.92rem;
-  line-height: 1.45;
-  color: #e2e8f0;
-  white-space: pre-wrap; /* Mantém os enters e os bullet points funcionando */
+    
+    .description-box {
+      flex-grow: 1; /* MÁGICA 3: O texto absorve exatamente o espaço vazio que sobrou na tela */
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 12px;
+      padding: clamp(10px, 2.5vh, 14px);
+      font-size: clamp(0.85rem, 2vh, 0.92rem);
+      line-height: 1.45;
+      color: #e2e8f0;
+      white-space: pre-wrap;
+      overflow-y: auto; /* Se o celular for um modelo jurássico muito pequeno, ele cria uma rolagem SÓ no texto */
     }
+    
     .controls { display: flex; gap: 10px; }
     .btn {
       flex: 1;
       border: none;
       border-radius: 14px;
-      padding: 14px 0;
+      padding: clamp(12px, 2.5vh, 14px) 0;
       font-size: 1rem;
       font-weight: 700;
       cursor: pointer;
@@ -115,14 +130,15 @@
     .btn-primary { background: var(--accent); color: #000; }
     .btn-pause { background: var(--danger); color: #fff; }
     .btn-secondary { background: rgba(255, 255, 255, 0.1); color: var(--text); }
-    .nav-buttons { display: flex; justify-content: space-between; gap: 10px; margin-top: 4px; }
-    .btn-sm { padding: 10px; font-size: 0.85rem; border-radius: 10px; }
+    
+    .nav-buttons { display: flex; justify-content: space-between; gap: 10px; margin-top: 0; }
+    .btn-sm { padding: clamp(8px, 2vh, 10px); font-size: 0.85rem; border-radius: 10px; }
   </style>
 </head>
 <body>
   <div class="app-container">
     <div class="header">
-      <h1>Rotina de Embocadura v4.1</h1>
+      <h1>Rotina de Embocadura v4.2</h1>
       <button id="dayBadge" class="day-badge" onclick="toggleDay()"></button>
     </div>
 
