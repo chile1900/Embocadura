@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Rotina de Embocadura v4 </title>
   <style>
-   :root {
+  :root {
       --bg: #0f172a;
       --card-bg: #1e293b;
       --accent: #38bdf8;
@@ -22,27 +22,27 @@
       background-color: var(--bg);
       color: var(--text);
       font-family: var(--font-family);
-      height: 100dvh; /* MÁGICA 1: Lê a altura real da tela ignorando a barra do navegador */
-      overflow: hidden; /* MÁGICA 2: Trava o site, impedindo a rolagem da página */
+      height: 100dvh;
+      overflow: hidden; /* Mantém a página travada */
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 12px;
+      padding: 10px;
     }
     
     .app-container {
       width: 100%;
       max-width: 440px;
-      height: 100%; /* Força a caixa a usar toda a altura disponível */
-      max-height: 750px; /* Evita que fique muito esticado em celulares muito grandes */
+      height: 100%;
+      max-height: 750px;
       background: var(--card-bg);
       border-radius: 24px;
-      padding: clamp(16px, 3vh, 24px); /* O preenchimento encolhe em telas pequenas */
+      padding: clamp(12px, 2.5vh, 24px);
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
       display: flex;
       flex-direction: column;
-      justify-content: space-between; /* Espalha os botões, textos e timer perfeitamente */
-      gap: clamp(8px, 2vh, 16px);
+      justify-content: center; /* Centraliza tudo perfeitamente */
+      gap: clamp(6px, 1.5vh, 16px); /* Diminui os buracos em telas curtas */
     }
     
     .header {
@@ -53,7 +53,7 @@
       padding-bottom: 8px;
     }
     
-    .header h1 { font-size: clamp(1rem, 2.5vh, 1.1rem); font-weight: 700; color: var(--accent); }
+    .header h1 { font-size: clamp(1rem, 2.2vh, 1.1rem); font-weight: 700; color: var(--accent); }
     .day-badge {
       background: rgba(56, 189, 248, 0.15);
       color: var(--accent);
@@ -73,11 +73,11 @@
       color: var(--text-muted);
       margin-bottom: 2px;
     }
-    .exercise-title { font-size: clamp(1.15rem, 3vh, 1.35rem); font-weight: 700; margin-bottom: 2px; }
+    .exercise-title { font-size: clamp(1.15rem, 2.8vh, 1.35rem); font-weight: 700; margin-bottom: 2px; }
     .step-indicator { font-size: 0.8rem; color: var(--text-muted); }
     
     .timer-display {
-      font-size: clamp(3rem, 8vh, 3.8rem); /* O número do timer diminui se a tela for pequena */
+      font-size: clamp(2.5rem, 6.5vh, 3.8rem); /* Encolhe mais agressivamente na vertical */
       font-weight: 800;
       text-align: center;
       font-variant-numeric: tabular-nums;
@@ -100,15 +100,15 @@
     }
     
     .description-box {
-      flex-grow: 1; /* MÁGICA 3: O texto absorve exatamente o espaço vazio que sobrou na tela */
       background: rgba(0, 0, 0, 0.25);
       border-radius: 12px;
-      padding: clamp(10px, 2.5vh, 14px);
-      font-size: clamp(0.85rem, 2vh, 0.92rem);
-      line-height: 1.45;
+      padding: clamp(10px, 2vh, 14px);
+      font-size: clamp(0.85rem, 2vh, 0.95rem);
+      line-height: 1.4;
       color: #e2e8f0;
       white-space: pre-wrap;
-      overflow-y: auto; /* Se o celular for um modelo jurássico muito pequeno, ele cria uma rolagem SÓ no texto */
+      height: max-content; /* A MÁGICA: O texto dita o próprio tamanho, impedindo que seja esmagado */
+      overflow: hidden; /* Remove de vez a barra de rolagem */
     }
     
     .controls { display: flex; gap: 10px; }
@@ -116,7 +116,7 @@
       flex: 1;
       border: none;
       border-radius: 14px;
-      padding: clamp(12px, 2.5vh, 14px) 0;
+      padding: clamp(10px, 2vh, 14px) 0; /* Botões ligeiramente mais finos em telas pequenas */
       font-size: 1rem;
       font-weight: 700;
       cursor: pointer;
@@ -132,7 +132,7 @@
     .btn-secondary { background: rgba(255, 255, 255, 0.1); color: var(--text); }
     
     .nav-buttons { display: flex; justify-content: space-between; gap: 10px; margin-top: 0; }
-    .btn-sm { padding: clamp(8px, 2vh, 10px); font-size: 0.85rem; border-radius: 10px; }
+    .btn-sm { padding: clamp(8px, 1.8vh, 10px); font-size: 0.85rem; border-radius: 10px; }  
   </style>
 </head>
 <body>
