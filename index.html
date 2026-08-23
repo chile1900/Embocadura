@@ -256,7 +256,30 @@
       document.getElementById("timerDisplay").textContent = formatTime(remainingSeconds);
       const progressPercent = totalSeconds > 0 ? (remainingSeconds / totalSeconds) * 100 : 0;
       document.getElementById("progressBar").style.width = `${progressPercent}%`;
+// Lógica do Ciclo Visual A-B-C a cada 10s
+      const subInstruction = document.getElementById("subInstruction");
+      if (ex.cicloABC && totalSeconds > 0) {
+        subInstruction.style.display = "block";
+        
+        // Calcula quanto tempo já passou para saber em qual ciclo estamos
+        const tempoDecorrido = totalSeconds - remainingSeconds;
+        
+        // Descobre se estamos no bloco 0 (A), 1 (B) ou 2 (C)
+        const cicloAtual = Math.floor((tempoDecorrido % 30) / 10); 
+        
+        // Calcula os segundos restantes para a próxima troca (10 a 1)
+        const segundosParaTroca = 10 - (tempoDecorrido % 10);
 
+        if (cicloAtual === 0) {
+          subInstruction.innerHTML = `Posição A: Lábio para fora <br><small>Troca em: ${segundosParaTroca}s</small>`;
+        } else if (cicloAtual === 1) {
+          subInstruction.innerHTML = `Posição B: Bico para frente <br><small>Troca em: ${segundosParaTroca}s</small>`;
+        } else {
+          subInstruction.innerHTML = `Posição C: Lábios para dentro <br><small>Troca em: ${segundosParaTroca}s</small>`;
+        }
+      } else {
+        subInstruction.style.display = "none";
+      }
       const mainBtn = document.getElementById("mainBtn");
       if (timerInterval) {
         mainBtn.textContent = "Pausar";
