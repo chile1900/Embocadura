@@ -279,23 +279,19 @@
       document.getElementById("exercisePhase").textContent = `Fase: ${ex.fase}`;
       document.getElementById("exerciseTitle").textContent = ex.nome;
       document.getElementById("stepIndicator").textContent = `Exercício ${currentIndex + 1} de ${list.length}`;
-      document.getElementById("exerciseDescription").textContent = ex.desc;
+      document.getElementById("exerciseDescription").innerHTML = ex.desc;
 
+      // Timer Principal
       document.getElementById("timerDisplay").textContent = formatTime(remainingSeconds);
       const progressPercent = totalSeconds > 0 ? (remainingSeconds / totalSeconds) * 100 : 0;
       document.getElementById("progressBar").style.width = `${progressPercent}%`;
-// Lógica do Ciclo Visual A-B-C a cada 10s
+
+      // Lógica do Ciclo Visual A-B-C a cada 10s
       const subInstruction = document.getElementById("subInstruction");
       if (ex.cicloABC && totalSeconds > 0) {
         subInstruction.style.display = "block";
-        
-        // Calcula quanto tempo já passou para saber em qual ciclo estamos
         const tempoDecorrido = totalSeconds - remainingSeconds;
-        
-        // Descobre se estamos no bloco 0 (A), 1 (B) ou 2 (C)
         const cicloAtual = Math.floor((tempoDecorrido % 30) / 10); 
-        
-        // Calcula os segundos restantes para a próxima troca (10 a 1)
         const segundosParaTroca = 10 - (tempoDecorrido % 10);
 
         if (cicloAtual === 0) {
@@ -308,35 +304,52 @@
       } else {
         subInstruction.style.display = "none";
       }
+
+      // LÓGICA CORRIGIDA DO BOTÃO PRINCIPAL
       const mainBtn = document.getElementById("mainBtn");
       if (timerInterval) {
         mainBtn.textContent = "Pausar";
         mainBtn.className = "btn btn-pause";
       } else {
-        mainBtn.textContent = remainingSeconds === totalSeconds ? "Iniciar" : "Continuar";
+        if (remainingSeconds <= 0) {
+          if (currentIndex < list.length - 1) {
+            mainBtn.textContent = "Ir para o Próximo";
+          } else {
+            mainBtn.textContent = "Treino Concluído";
+          }
+        } else if (remainingSeconds === totalSeconds) {
+          mainBtn.textContent = "Iniciar";
+        } else {
+          mainBtn.textContent = "Continuar"; // Só aparece se pausar no meio do tempo
+        }
         mainBtn.className = "btn btn-primary";
       }
     }
 
-    function loadExercise(index) {
-      clearInterval(timerInterval);
-      timerInterval = null;
-      currentIndex = index;
-      const ex = routineData[currentDayMode][currentIndex];
-      totalSeconds = ex.tempoMin * 60;
-      remainingSeconds = totalSeconds;
-      updateUI();
-    }
-
     function toggleTimer() {
+      const list = routineData[currentDayMode];
+      
       if (timerInterval) {
         clearInterval(timerInterval);
         timerInterval = null;
       } else {
-        if (remainingSeconds <= 0) return;
+        // LÓGICA CORRIGIDA DE AVANÇO AUTOMÁTICO
+        if (remainingSeconds <= 0) {
+          if (currentIndex < list.length - 1) {
+            nextExercise(); // Avança para o próximo exercício se clicar no fim do tempo
+          } else {
+            loadExercise(0); // Reinicia o app se clicar em "Treino Concluído" no final
+          }
+          return;
+        }
+        
+        // Ativação de áudio inicial necessária para o iOS/Safari
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
         timerInterval = setInterval(() => {
           remainingSeconds--;
           updateUI();
+          
           if (remainingSeconds <= 0) {
             clearInterval(timerInterval);
             timerInterval = null;
