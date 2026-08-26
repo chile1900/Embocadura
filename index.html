@@ -133,6 +133,7 @@
     .btn:active { opacity: 0.8; }
     .btn-primary { background: var(--accent); color: #000; }
     .btn-pause { background: var(--danger); color: #fff; }
+    .btn-success { background: var(--success); color: #fff; }
     .btn-secondary { background: rgba(255, 255, 255, 0.1); color: var(--text); }
     
     .nav-buttons { display: flex; justify-content: space-between; gap: 10px; margin-top: 0; }
@@ -151,7 +152,7 @@
 <body>
   <div class="app-container">
     <div class="header">
-      <h1>Rotina de Embocadura v6</h1>
+      <h1>Rotina de Embocadura</h1>
       <button id="dayBadge" class="day-badge" onclick="toggleDay()"></button>
     </div>
 
@@ -191,7 +192,7 @@
           fase: "Resistência",
           nome: "Firmeza dos Cantos",
           tempoMin: 2,
-          desc: "•  Forme sua embocadura padrão e trave os cantos da boca.\n•  Segure firme até sentir queimar.\n•  Tente manter por mais 30 segundos após a queimação."
+          desc: "Forme sua embocadura padrão e trave os cantos da boca.\nSegure firme até sentir queimar.\nTente manter por mais 30 segundos após a queimação."
         },
         {
           fase: "Carga",
@@ -224,7 +225,7 @@
           fase: "Resistência",
           nome: "Puxada para Baixo com o Dedo",
           tempoMin: 1.5,
-          desc: "•  Coloque o dedo indicador no lábio inferior. Pressione o lábio com o dedo e puxe para baixo.\n•  Resista a esse movimento levantando ativamente o lábio inferior para cima e afastando-o dos dentes usando os músculos faciais.\n•  Mantenha a resistência por 30 a 40 segundos. \n•  Atenção! Não é para esmagar o lábio contra os dentes."
+          desc: "•  Coloque o dedo indicador no lábio inferior. Pressione o lábio sobre os dentes inferiores e puxe para baixo.\n•  Resista a esse movimento levantando ativamente o lábio inferior para cima e afastando-o dos dentes usando os músculos faciais.\n•  Mantenha a resistência por 30 a 40 segundos. Descanse e repita."
         },
         {
           fase: "Velocidade / Queimação",
@@ -236,7 +237,7 @@
           fase: "Isolamento",
           nome: "O Abraço Interno de 'Mmm'",
           tempoMin: 2,
-          desc: "•  Mantenha os lábios fechados (fazendo 'mmm').\n•  Puxe os músculos dos lábios para dentro em direção aos dentes, como se estivessem pressionando os dentes pela frente.\n•  Mantenha os cantos da boca completamente neutros (sem sorrir ou fazer expressão de tristeza).\n•  Segure até sentir os músculos queimarem."
+          desc: "•  Mantenha os lábios fechados (fazendo 'mmm').\n•  Puxe os músculos dos lábios para dentro em direção ao centro, como se estivessem 'abraçando' os dentes.\n•  Mantenha os cantos da boca completamente neutros (sem sorrir ou fazer expressão de tristeza).\n•  Segure até sentir os músculos queimarem."
         }
       ]
     };
@@ -288,7 +289,6 @@
       const progressPercent = totalSeconds > 0 ? (remainingSeconds / totalSeconds) * 100 : 0;
       document.getElementById("progressBar").style.width = `${progressPercent}%`;
 
-      // Lógica do Ciclo Visual A-B-C a cada 10s
       const subInstruction = document.getElementById("subInstruction");
       if (ex.cicloABC && totalSeconds > 0) {
         subInstruction.style.display = "block";
@@ -312,6 +312,14 @@
       if (timerInterval) {
         mainBtn.textContent = "Pausar";
         mainBtn.className = "btn btn-pause";
+      } else if (remainingSeconds <= 0) {
+        if (currentIndex < list.length - 1) {
+          mainBtn.textContent = "Concluído → Próximo";
+          mainBtn.className = "btn btn-success";
+        } else {
+          mainBtn.textContent = "Treino Finalizado";
+          mainBtn.className = "btn btn-success";
+        }
       } else {
         mainBtn.textContent = remainingSeconds === totalSeconds ? "Iniciar" : "Continuar";
         mainBtn.className = "btn btn-primary";
@@ -333,7 +341,16 @@
         clearInterval(timerInterval);
         timerInterval = null;
       } else {
-        if (remainingSeconds <= 0) return;
+        if (remainingSeconds <= 0) {
+          const list = routineData[currentDayMode];
+          if (currentIndex < list.length - 1) {
+            nextExercise();
+          } else {
+            loadExercise(0); 
+          }
+          return;
+        }
+        
         timerInterval = setInterval(() => {
           remainingSeconds--;
           updateUI();
