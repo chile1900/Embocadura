@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Rotina de Embocadura v4.5</title>
+  <title>Rotina de Embocadura v5.2</title>
   <style>
     :root {
       --bg: #0f172a;
@@ -20,7 +20,7 @@
       background-color: var(--bg);
       color: var(--text);
       font-family: var(--font-family);
-      min-height: 100dvh; /* Permite rolar a tela se o celular for muito pequeno */
+      min-height: 100dvh;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -101,7 +101,7 @@
       line-height: 1.45;
       color: #e2e8f0;
       white-space: pre-wrap;
-      height: auto; /* A SOLUÇÃO: Cresce naturalmente com o texto sem bugar no celular */
+      height: auto;
     }
     
     .controls { display: flex; gap: 10px; }
@@ -139,7 +139,7 @@
 <body>
   <div class="app-container">
     <div class="header">
-      <h1>Rotina de Embocadura v5.1</h1>
+      <h1>Rotina de Embocadura v5.2</h1>
       <button id="dayBadge" class="day-badge" onclick="toggleDay()"></button>
     </div>
 
@@ -170,7 +170,7 @@
       <button class="btn btn-secondary btn-sm" onclick="nextExercise()">Próximo →</button>
     </div>
     
-    <div class="footer-tag"> Desenvolvido por Filipe Nader <br> para os meus alunos de saxofone.<br></div>
+    <div class="footer-tag"> Desenvolvido por Filipe Nader <br> para os meus alunos de saxofone.</div>
   </div>
 
   <script>
@@ -180,25 +180,25 @@
           fase: "Resistência",
           nome: "Firmeza dos Cantos",
           tempoMin: 2,
-          desc: "•  Forme sua embocadura padrão e trave os cantos da boca. \n•  Segure firme até sentir queimar. \n•  Tente manter por mais 30 segundos após a queimação."
+          desc: "• Forme sua embocadura padrão e trave os cantos da boca.\n• Segure firme até sentir queimar.\n• Tente manter por mais 30 segundos após a queimação."
         },
         {
           fase: "Carga",
           nome: "O Exercício do Lápis",
           tempoMin: 2,
-          desc: "•  Segure a base de um lápis usando apenas a força dos lábios, sem encostar os dentes. \n•  Mantenha-o reto para a frente até o limite da sua resistência."
+          desc: "• Segure a base de um lápis usando apenas a força dos lábios, sem encostar os dentes.\n• Mantenha-o reto para a frente até o limite da sua resistência."
         },
         {
           fase: "Tensão",
           nome: "Sustentação com Separação",
           tempoMin: 1.5,
-          desc: "•  Pressione os lábios firmemente um contra o outro. \n•  Sem soltar os lábios, abra os dentes o máximo que puder dentro da boca. \n•  Segure esse alongamento."
+          desc: "• Pressione os lábios firmemente um contra o outro.\n• Sem soltar os lábios, abra os dentes o máximo que puder dentro da boca.\n• Segure esse alongamento."
         },
         {
           fase: "Foco",
           nome: "O Bico de Cordão",
           tempoMin: 1.5,
-          desc: "•  Faça um bico exagerado. \n•  Force a musculatura para o centro, como se estivesse segurando um objeto minúsculo com os lábios. \n•  Mantenha a tensão."
+          desc: "• Faça um bico exagerado.\n• Force a musculatura para o centro, como se estivesse segurando um objeto minúsculo com os lábios.\n• Mantenha a tensão."
         }
       ],
       impar: [
@@ -207,25 +207,25 @@
           nome: "Isometria no Espelho",
           tempoMin: 2,
           cicloABC: true,
-          desc: "•  A) Role o lábio inferior para fora em direção ao queixo, segure por 10s, volte à posição inicial. \n•  B) Projete os lábios para frente (fazendo bico), segure por 10s. \n•  C) Role os lábios para dentro sobre os dentes até que a parte vermelha desapareça, segure por 10s. \n•  Repita o ciclo por 2 minutos."
+          desc: "• A) Role o lábio inferior para fora em direção ao queixo, segure por 10s, volte à posição inicial.\n• B) Projete os lábios para frente (fazendo bico), segure por 10s.\n• C) Role os lábios para dentro sobre os dentes até que a parte vermelha desapareça, segure por 10s.\n• Repita o ciclo por 2 minutos."
         },
         {
           fase: "Resistência",
           nome: "Puxada para Baixo com o Dedo",
           tempoMin: 1.5,
-          desc: "•  Coloque o dedo indicador no lábio inferior. Pressione o lábio e puxe para baixo. Atenção! Não em cima do dente. O lábio na frente dos dentes.\n•  Resista a esse movimento levantando ativamente o lábio inferior para cima usando os músculos faciais. \n•  Mantenha a resistência até queimar."
+          desc: "• Coloque o dedo indicador no lábio inferior. Pressione o lábio e puxe para baixo. Atenção! Não em cima do dente. O lábio na frente dos dentes.\n• Resista a esse movimento levantando ativamente o lábio inferior para cima usando os músculos faciais.\n• Mantenha a resistência até queimar."
         },
         {
           fase: "Velocidade / Queimação",
           nome: "Falha de Bico e Sorriso",
           tempoMin: 1.5,
-          desc: "•  Faça o bico mais exagerado e concentrado possível e, em seguida, mude instantaneamente para o sorriso mais largo que conseguir.\n•  Alterne o mais rápido possível até os músculos queimarem completamente."
+          desc: "• Faça o bico mais exagerado e concentrado possível e, em seguida, mude instantaneamente para o sorriso mais largo que conseguir.\n• Alterne o mais rápido possível até os músculos queimarem completamente."
         },
         {
           fase: "Isolamento",
           nome: "O Abraço Interno de 'Mmm'",
           tempoMin: 2,
-          desc: "•  Mantenha os lábios fechados (fazendo 'mmm'). \n•  Puxe os músculos dos lábios para dentro em direção ao centro, como se estivessem 'abraçando' os dentes. \n•  Mantenha os cantos da boca completamente neutros (sem sorrir ou fazer expressão de tristeza). \n•  Segure até sentir os músculos queimarem."
+          desc: "• Mantenha os lábios fechados (fazendo 'mmm').\n• Puxe os músculos dos lábios para dentro em direção ao centro, como se estivessem 'abraçando' os dentes.\n• Mantenha os cantos da boca completamente neutros (sem sorrir ou fazer expressão de tristeza).\n• Segure até sentir os músculos queimarem."
         }
       ]
     };
@@ -379,10 +379,9 @@
       loadExercise(0);
     }
 
-    // Garante que o texto seja carregado corretamente assim que a página abrir
-    window.onload = function() {
-      loadExercise(0);
-    };
+    // Inicializa o app assim que os elementos existirem
+    loadExercise(0);
+
   </script>
 </body>
 </html>
