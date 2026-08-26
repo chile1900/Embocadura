@@ -3,14 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Rotina de Embocadura v5.2</title>
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#0f172a">
+  <title>Rotina de Embocadura</title>
   <style>
     :root {
       --bg: #0f172a;
       --card-bg: #1e293b;
       --accent: #38bdf8;
+      --accent-hover: #0284c7;
       --text: #f8fafc;
       --text-muted: #94a3b8;
+      --success: #22c55e;
       --danger: #ef4444;
       --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
@@ -20,23 +26,27 @@
       background-color: var(--bg);
       color: var(--text);
       font-family: var(--font-family);
-      min-height: 100dvh;
+      height: 100dvh;
+      overflow: hidden; 
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 16px;
+      padding: 10px;
     }
     
     .app-container {
       width: 100%;
       max-width: 440px;
+      height: 100%;
+      max-height: 750px;
       background: var(--card-bg);
       border-radius: 24px;
-      padding: 24px;
+      padding: clamp(12px, 2.5vh, 24px);
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      justify-content: center; 
+      gap: clamp(6px, 1.5vh, 16px); 
     }
     
     .header {
@@ -44,10 +54,10 @@
       justify-content: space-between;
       align-items: center;
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      padding-bottom: 12px;
+      padding-bottom: 8px;
     }
     
-    .header h1 { font-size: 1.1rem; font-weight: 700; color: var(--accent); }
+    .header h1 { font-size: clamp(1rem, 2.2vh, 1.1rem); font-weight: 700; color: var(--accent); }
     .day-badge {
       background: rgba(56, 189, 248, 0.15);
       color: var(--accent);
@@ -65,18 +75,18 @@
       text-transform: uppercase;
       letter-spacing: 0.08em;
       color: var(--text-muted);
-      margin-bottom: 4px;
+      margin-bottom: 2px;
     }
-    .exercise-title { font-size: 1.35rem; font-weight: 700; margin-bottom: 4px; }
+    .exercise-title { font-size: clamp(1.15rem, 2.8vh, 1.35rem); font-weight: 700; margin-bottom: 2px; }
     .step-indicator { font-size: 0.8rem; color: var(--text-muted); }
     
     .timer-display {
-      font-size: 3.8rem;
+      font-size: clamp(2.5rem, 6.5vh, 3.8rem); 
       font-weight: 800;
       text-align: center;
       font-variant-numeric: tabular-nums;
       color: var(--text);
-      margin: 4px 0;
+      margin: 0;
     }
     
     .timer-progress {
@@ -96,12 +106,13 @@
     .description-box {
       background: rgba(0, 0, 0, 0.25);
       border-radius: 12px;
-      padding: 16px;
-      font-size: 0.95rem;
-      line-height: 1.45;
+      padding: clamp(10px, 2vh, 14px);
+      font-size: clamp(0.85rem, 2vh, 0.95rem);
+      line-height: 1.4;
       color: #e2e8f0;
       white-space: pre-wrap;
-      height: auto;
+      height: max-content; 
+      overflow: hidden; 
     }
     
     .controls { display: flex; gap: 10px; }
@@ -109,13 +120,14 @@
       flex: 1;
       border: none;
       border-radius: 14px;
-      padding: 14px 0;
+      padding: clamp(10px, 2vh, 14px) 0; 
       font-size: 1rem;
       font-weight: 700;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
+      gap: 6px;
       transition: opacity 0.15s ease;
     }
     .btn:active { opacity: 0.8; }
@@ -123,8 +135,8 @@
     .btn-pause { background: var(--danger); color: #fff; }
     .btn-secondary { background: rgba(255, 255, 255, 0.1); color: var(--text); }
     
-    .nav-buttons { display: flex; justify-content: space-between; gap: 10px; margin-top: 4px; }
-    .btn-sm { padding: 10px; font-size: 0.85rem; border-radius: 10px; }  
+    .nav-buttons { display: flex; justify-content: space-between; gap: 10px; margin-top: 0; }
+    .btn-sm { padding: clamp(8px, 1.8vh, 10px); font-size: 0.85rem; border-radius: 10px; }
     
     .footer-tag {
       text-align: center;
@@ -139,7 +151,7 @@
 <body>
   <div class="app-container">
     <div class="header">
-      <h1>Rotina de Embocadura v5.2</h1>
+      <h1>Rotina de Embocadura v6</h1>
       <button id="dayBadge" class="day-badge" onclick="toggleDay()"></button>
     </div>
 
@@ -151,7 +163,6 @@
 
     <div class="timer-display" id="timerDisplay">00:00</div>
     
-    <!-- Sub-instrução Visual -->
     <div id="subInstruction" style="display: none; font-size: 1.1rem; font-weight: bold; color: var(--accent); text-align: center; margin-bottom: 12px; background: rgba(56, 189, 248, 0.1); padding: 10px; border-radius: 10px;"></div>
     
     <div class="timer-progress">
@@ -170,7 +181,7 @@
       <button class="btn btn-secondary btn-sm" onclick="nextExercise()">Próximo →</button>
     </div>
     
-    <div class="footer-tag"> Desenvolvido por Filipe Nader <br> para os meus alunos de saxofone.</div>
+    <div class="footer-tag">- Para os meus alunos de saxofone.<br>Desenvolvido por Filipe Nader</div>
   </div>
 
   <script>
@@ -180,25 +191,25 @@
           fase: "Resistência",
           nome: "Firmeza dos Cantos",
           tempoMin: 2,
-          desc: "• Forme sua embocadura padrão e trave os cantos da boca.\n• Segure firme até sentir queimar.\n• Tente manter por mais 30 segundos após a queimação."
+          desc: "Forme sua embocadura padrão e trave os cantos da boca.\nSegure firme até sentir queimar.\nTente manter por mais 30 segundos após a queimação."
         },
         {
           fase: "Carga",
           nome: "O Exercício do Lápis",
           tempoMin: 2,
-          desc: "• Segure a base de um lápis usando apenas a força dos lábios, sem encostar os dentes.\n• Mantenha-o reto para a frente até o limite da sua resistência."
+          desc: "•  Segure a base de um lápis usando apenas a força dos lábios, sem encostar os dentes.\n•  Mantenha-o reto para a frente até o limite da sua resistência."
         },
         {
           fase: "Tensão",
           nome: "Sustentação com Separação",
           tempoMin: 1.5,
-          desc: "• Pressione os lábios firmemente um contra o outro.\n• Sem soltar os lábios, abra os dentes o máximo que puder dentro da boca.\n• Segure esse alongamento."
+          desc: "•  Pressione os lábios firmemente um contra o outro.\n•  Sem soltar os lábios, abra os dentes o máximo que puder dentro da boca.\n•  Segure esse alongamento."
         },
         {
           fase: "Foco",
           nome: "O Bico de Cordão",
           tempoMin: 1.5,
-          desc: "• Faça um bico exagerado.\n• Force a musculatura para o centro, como se estivesse segurando um objeto minúsculo com os lábios.\n• Mantenha a tensão."
+          desc: "•  Faça um bico exagerado.\n•  Force a musculatura para o centro, como se estivesse segurando um objeto minúsculo com os lábios.\n•  Mantenha a tensão."
         }
       ],
       impar: [
@@ -207,25 +218,25 @@
           nome: "Isometria no Espelho",
           tempoMin: 2,
           cicloABC: true,
-          desc: "• A) Role o lábio inferior para fora em direção ao queixo, segure por 10s, volte à posição inicial.\n• B) Projete os lábios para frente (fazendo bico), segure por 10s.\n• C) Role os lábios para dentro sobre os dentes até que a parte vermelha desapareça, segure por 10s.\n• Repita o ciclo por 2 minutos."
+          desc: "•  A) Role o lábio inferior para fora em direção ao queixo, segure por 10s, volte à posição inicial.\n•  B) Projete os lábios para frente (fazendo bico), segure por 10s.\n•  C) Role os lábios para dentro sobre os dentes até que a parte vermelha desapareça, segure por 10s.\n•  Repita o ciclo por 3 minutos."
         },
         {
           fase: "Resistência",
           nome: "Puxada para Baixo com o Dedo",
           tempoMin: 1.5,
-          desc: "• Coloque o dedo indicador no lábio inferior. Pressione o lábio e puxe para baixo. Atenção! Não em cima do dente. O lábio na frente dos dentes.\n• Resista a esse movimento levantando ativamente o lábio inferior para cima usando os músculos faciais.\n• Mantenha a resistência até queimar."
+          desc: "•  Coloque o dedo indicador no lábio inferior. Pressione o lábio sobre os dentes inferiores e puxe para baixo.\n•  Resista a esse movimento levantando ativamente o lábio inferior para cima e afastando-o dos dentes usando os músculos faciais.\n•  Mantenha a resistência por 30 a 40 segundos. Descanse e repita."
         },
         {
           fase: "Velocidade / Queimação",
           nome: "Falha de Bico e Sorriso",
           tempoMin: 1.5,
-          desc: "• Faça o bico mais exagerado e concentrado possível e, em seguida, mude instantaneamente para o sorriso mais largo que conseguir.\n• Alterne o mais rápido possível até os músculos queimarem completamente."
+          desc: "•  Faça o bico mais exagerado e concentrado possível e, em seguida, mude instantaneamente para o sorriso mais largo que conseguir.\n•  Alterne o mais rápido possível até os músculos queimarem completamente."
         },
         {
           fase: "Isolamento",
           nome: "O Abraço Interno de 'Mmm'",
           tempoMin: 2,
-          desc: "• Mantenha os lábios fechados (fazendo 'mmm').\n• Puxe os músculos dos lábios para dentro em direção ao centro, como se estivessem 'abraçando' os dentes.\n• Mantenha os cantos da boca completamente neutros (sem sorrir ou fazer expressão de tristeza).\n• Segure até sentir os músculos queimarem."
+          desc: "•  Mantenha os lábios fechados (fazendo 'mmm').\n•  Puxe os músculos dos lábios para dentro em direção ao centro, como se estivessem 'abraçando' os dentes.\n•  Mantenha os cantos da boca completamente neutros (sem sorrir ou fazer expressão de tristeza).\n•  Segure até sentir os músculos queimarem."
         }
       ]
     };
@@ -271,9 +282,8 @@
       document.getElementById("exercisePhase").textContent = `Fase: ${ex.fase}`;
       document.getElementById("exerciseTitle").textContent = ex.nome;
       document.getElementById("stepIndicator").textContent = `Exercício ${currentIndex + 1} de ${list.length}`;
-      document.getElementById("exerciseDescription").innerHTML = ex.desc;
+      document.getElementById("exerciseDescription").textContent = ex.desc;
 
-      // Timer Principal
       document.getElementById("timerDisplay").textContent = formatTime(remainingSeconds);
       const progressPercent = totalSeconds > 0 ? (remainingSeconds / totalSeconds) * 100 : 0;
       document.getElementById("progressBar").style.width = `${progressPercent}%`;
@@ -282,6 +292,7 @@
       const subInstruction = document.getElementById("subInstruction");
       if (ex.cicloABC && totalSeconds > 0) {
         subInstruction.style.display = "block";
+        
         const tempoDecorrido = totalSeconds - remainingSeconds;
         const cicloAtual = Math.floor((tempoDecorrido % 30) / 10); 
         const segundosParaTroca = 10 - (tempoDecorrido % 10);
@@ -297,49 +308,35 @@
         subInstruction.style.display = "none";
       }
 
-      // LÓGICA DO BOTÃO PRINCIPAL
       const mainBtn = document.getElementById("mainBtn");
       if (timerInterval) {
         mainBtn.textContent = "Pausar";
         mainBtn.className = "btn btn-pause";
       } else {
-        if (remainingSeconds <= 0) {
-          if (currentIndex < list.length - 1) {
-            mainBtn.textContent = "Ir para o Próximo";
-          } else {
-            mainBtn.textContent = "Treino Concluído";
-          }
-        } else if (remainingSeconds === totalSeconds) {
-          mainBtn.textContent = "Iniciar";
-        } else {
-          mainBtn.textContent = "Continuar";
-        }
+        mainBtn.textContent = remainingSeconds === totalSeconds ? "Iniciar" : "Continuar";
         mainBtn.className = "btn btn-primary";
       }
     }
 
+    function loadExercise(index) {
+      clearInterval(timerInterval);
+      timerInterval = null;
+      currentIndex = index;
+      const ex = routineData[currentDayMode][currentIndex];
+      totalSeconds = ex.tempoMin * 60;
+      remainingSeconds = totalSeconds;
+      updateUI();
+    }
+
     function toggleTimer() {
-      const list = routineData[currentDayMode];
-      
       if (timerInterval) {
         clearInterval(timerInterval);
         timerInterval = null;
       } else {
-        if (remainingSeconds <= 0) {
-          if (currentIndex < list.length - 1) {
-            nextExercise();
-          } else {
-            loadExercise(0);
-          }
-          return;
-        }
-        
-        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        
+        if (remainingSeconds <= 0) return;
         timerInterval = setInterval(() => {
           remainingSeconds--;
           updateUI();
-          
           if (remainingSeconds <= 0) {
             clearInterval(timerInterval);
             timerInterval = null;
@@ -379,9 +376,8 @@
       loadExercise(0);
     }
 
-    // Inicializa o app assim que os elementos existirem
+    // Inicialização
     loadExercise(0);
-
   </script>
 </body>
 </html>
