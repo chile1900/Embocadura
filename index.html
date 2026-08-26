@@ -3,16 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Rotina de Embocadura v4</title>
+  <title>Rotina de Embocadura v4.5</title>
   <style>
     :root {
       --bg: #0f172a;
       --card-bg: #1e293b;
       --accent: #38bdf8;
-      --accent-hover: #0284c7;
       --text: #f8fafc;
       --text-muted: #94a3b8;
-      --success: #22c55e;
       --danger: #ef4444;
       --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
@@ -22,27 +20,23 @@
       background-color: var(--bg);
       color: var(--text);
       font-family: var(--font-family);
-      height: 100dvh;
-      overflow: hidden; /* Mantém a página travada */
+      min-height: 100dvh; /* Permite rolar a tela se o celular for muito pequeno */
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 10px;
+      padding: 16px;
     }
     
     .app-container {
       width: 100%;
       max-width: 440px;
-      height: 100%;
-      max-height: 750px;
       background: var(--card-bg);
       border-radius: 24px;
-      padding: clamp(12px, 2.5vh, 24px);
+      padding: 24px;
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
       display: flex;
       flex-direction: column;
-      justify-content: center; /* Centraliza tudo perfeitamente */
-      gap: clamp(6px, 1.5vh, 16px); /* Diminui os buracos em telas curtas */
+      gap: 16px;
     }
     
     .header {
@@ -50,10 +44,10 @@
       justify-content: space-between;
       align-items: center;
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      padding-bottom: 8px;
+      padding-bottom: 12px;
     }
     
-    .header h1 { font-size: clamp(1rem, 2.2vh, 1.1rem); font-weight: 700; color: var(--accent); }
+    .header h1 { font-size: 1.1rem; font-weight: 700; color: var(--accent); }
     .day-badge {
       background: rgba(56, 189, 248, 0.15);
       color: var(--accent);
@@ -71,18 +65,18 @@
       text-transform: uppercase;
       letter-spacing: 0.08em;
       color: var(--text-muted);
-      margin-bottom: 2px;
+      margin-bottom: 4px;
     }
-    .exercise-title { font-size: clamp(1.15rem, 2.8vh, 1.35rem); font-weight: 700; margin-bottom: 2px; }
+    .exercise-title { font-size: 1.35rem; font-weight: 700; margin-bottom: 4px; }
     .step-indicator { font-size: 0.8rem; color: var(--text-muted); }
     
     .timer-display {
-      font-size: clamp(2.5rem, 6.5vh, 3.8rem); /* Encolhe mais agressivamente na vertical */
+      font-size: 3.8rem;
       font-weight: 800;
       text-align: center;
       font-variant-numeric: tabular-nums;
       color: var(--text);
-      margin: 0;
+      margin: 4px 0;
     }
     
     .timer-progress {
@@ -102,13 +96,12 @@
     .description-box {
       background: rgba(0, 0, 0, 0.25);
       border-radius: 12px;
-      padding: clamp(10px, 2vh, 14px);
-      font-size: clamp(0.85rem, 2vh, 0.95rem);
-      line-height: 1.4;
+      padding: 16px;
+      font-size: 0.95rem;
+      line-height: 1.45;
       color: #e2e8f0;
       white-space: pre-wrap;
-      height: max-content; /* A MÁGICA: O texto dita o próprio tamanho, impedindo que seja esmagado */
-      overflow: hidden; /* Remove de vez a barra de rolagem */
+      height: auto; /* A SOLUÇÃO: Cresce naturalmente com o texto sem bugar no celular */
     }
     
     .controls { display: flex; gap: 10px; }
@@ -116,14 +109,13 @@
       flex: 1;
       border: none;
       border-radius: 14px;
-      padding: clamp(10px, 2vh, 14px) 0; /* Botões ligeiramente mais finos em telas pequenas */
+      padding: 14px 0;
       font-size: 1rem;
       font-weight: 700;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
       transition: opacity 0.15s ease;
     }
     .btn:active { opacity: 0.8; }
@@ -131,8 +123,9 @@
     .btn-pause { background: var(--danger); color: #fff; }
     .btn-secondary { background: rgba(255, 255, 255, 0.1); color: var(--text); }
     
-    .nav-buttons { display: flex; justify-content: space-between; gap: 10px; margin-top: 0; }
-    .btn-sm { padding: clamp(8px, 1.8vh, 10px); font-size: 0.85rem; border-radius: 10px; }  
+    .nav-buttons { display: flex; justify-content: space-between; gap: 10px; margin-top: 4px; }
+    .btn-sm { padding: 10px; font-size: 0.85rem; border-radius: 10px; }  
+    
     .footer-tag {
       text-align: center;
       font-size: 0.7rem;
@@ -146,7 +139,7 @@
 <body>
   <div class="app-container">
     <div class="header">
-      <h1>Rotina de Embocadura v5</h1>
+      <h1>Rotina de Embocadura v4.5</h1>
       <button id="dayBadge" class="day-badge" onclick="toggleDay()"></button>
     </div>
 
@@ -158,7 +151,7 @@
 
     <div class="timer-display" id="timerDisplay">00:00</div>
     
-    <!-- Coloque a instrução AQUI (fora da barra de progresso) -->
+    <!-- Sub-instrução Visual -->
     <div id="subInstruction" style="display: none; font-size: 1.1rem; font-weight: bold; color: var(--accent); text-align: center; margin-bottom: 12px; background: rgba(56, 189, 248, 0.1); padding: 10px; border-radius: 10px;"></div>
     
     <div class="timer-progress">
@@ -176,8 +169,8 @@
       <button class="btn btn-secondary btn-sm" onclick="prevExercise()">← Anterior</button>
       <button class="btn btn-secondary btn-sm" onclick="nextExercise()">Próximo →</button>
     </div>
+    
     <div class="footer-tag"> Desenvolvido por Filipe Nader <br> para os meus alunos de saxofone.<br></div>
-
   </div>
 
   <script>
@@ -304,7 +297,7 @@
         subInstruction.style.display = "none";
       }
 
-      // LÓGICA CORRIGIDA DO BOTÃO PRINCIPAL
+      // LÓGICA DO BOTÃO PRINCIPAL
       const mainBtn = document.getElementById("mainBtn");
       if (timerInterval) {
         mainBtn.textContent = "Pausar";
@@ -319,7 +312,7 @@
         } else if (remainingSeconds === totalSeconds) {
           mainBtn.textContent = "Iniciar";
         } else {
-          mainBtn.textContent = "Continuar"; // Só aparece se pausar no meio do tempo
+          mainBtn.textContent = "Continuar";
         }
         mainBtn.className = "btn btn-primary";
       }
@@ -332,17 +325,15 @@
         clearInterval(timerInterval);
         timerInterval = null;
       } else {
-        // LÓGICA CORRIGIDA DE AVANÇO AUTOMÁTICO
         if (remainingSeconds <= 0) {
           if (currentIndex < list.length - 1) {
-            nextExercise(); // Avança para o próximo exercício se clicar no fim do tempo
+            nextExercise();
           } else {
-            loadExercise(0); // Reinicia o app se clicar em "Treino Concluído" no final
+            loadExercise(0);
           }
           return;
         }
         
-        // Ativação de áudio inicial necessária para o iOS/Safari
         if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         
         timerInterval = setInterval(() => {
@@ -388,8 +379,10 @@
       loadExercise(0);
     }
 
-    // Inicialização
-    loadExercise(0);
+    // Garante que o texto seja carregado corretamente assim que a página abrir
+    window.onload = function() {
+      loadExercise(0);
+    };
   </script>
 </body>
 </html>
