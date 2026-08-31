@@ -128,9 +128,9 @@
       align-items: center;
       justify-content: center;
       gap: 6px;
-      transition: opacity 0.15s ease;
+      transition: transform 0.1s ease, opacity 0.15s ease;
     }
-    .btn:active { opacity: 0.8; }
+    .btn:active { transform: scale(0.96); opacity: 0.8; }
     .btn-primary { background: var(--accent); color: #000; }
     .btn-pause { background: var(--danger); color: #fff; }
     .btn-success { background: var(--success); color: #fff; }
@@ -146,6 +146,61 @@
       margin-top: 4px;
       opacity: 0.6;
       letter-spacing: 0.03em;
+    }
+
+    /* --- ESTILOS DA TELA DE COMEMORAÇÃO --- */
+    .celebration-screen {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100dvh;
+      background: rgba(15, 23, 42, 0.95);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+    .celebration-screen.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .celebration-card {
+      background: var(--card-bg);
+      padding: 32px;
+      border-radius: 24px;
+      text-align: center;
+      transform: scale(0.8);
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      box-shadow: 0 10px 40px rgba(56, 189, 248, 0.2);
+      width: 85%;
+      max-width: 320px;
+    }
+    .celebration-screen.active .celebration-card {
+      transform: scale(1);
+    }
+    .trophy { 
+      font-size: 4.5rem; 
+      animation: bounce 1s infinite alternate; 
+      margin-bottom: 12px; 
+    }
+    @keyframes bounce { 
+      from { transform: translateY(0); } 
+      to { transform: translateY(-12px); } 
+    }
+    .confetti {
+      position: fixed;
+      width: 10px;
+      height: 20px;
+      border-radius: 2px;
+      top: -20px;
+      z-index: 1001;
+      animation: fall linear forwards;
+    }
+    @keyframes fall {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(110dvh) rotate(720deg); opacity: 0; }
     }
   </style>
 </head>
@@ -185,6 +240,16 @@
     <div class="footer-tag">- Para os meus alunos de saxofone.<br>Desenvolvido por Filipe Nader</div>
   </div>
 
+  <!-- TELA DE COMEMORAÇÃO INVISÍVEL -->
+  <div id="celebrationScreen" class="celebration-screen">
+    <div class="celebration-card">
+      <div class="trophy">🏆</div>
+      <h2 style="color: var(--accent); margin-bottom: 8px;">Parabéns!</h2>
+      <p style="color: var(--text-muted); margin-bottom: 24px; font-size: 0.9rem;">Você concluiu o treino de hoje com sucesso.</p>
+      <button class="btn btn-primary" onclick="closeCelebration()" style="width: 100%;">Voltar ao Início</button>
+    </div>
+  </div>
+
   <script>
     const routineData = {
       par: [
@@ -192,7 +257,7 @@
           fase: "Resistência",
           nome: "Firmeza dos Cantos",
           tempoMin: 2,
-          desc: "•  Forme sua embocadura padrão e trave os cantos da boca.\n•  Segure firme até sentir queimar.\n•  Tente manter por mais 30 segundos após a queimação."
+          desc: "Forme sua embocadura padrão e trave os cantos da boca.\nSegure firme até sentir queimar.\nTente manter por mais 30 segundos após a queimação."
         },
         {
           fase: "Carga",
@@ -204,7 +269,7 @@
           fase: "Tensão",
           nome: "Sustentação com Separação",
           tempoMin: 1.5,
-          desc: "•  Pressione os lábios firmemente um contra o outro, como se fosse pressionar uma folha de papel.\n•  Sem soltar os lábios, abra os dentes o máximo que puder dentro da boca.\n•  Segure esse alongamento."
+          desc: "•  Pressione os lábios firmemente um contra o outro.\n•  Sem soltar os lábios, abra os dentes o máximo que puder dentro da boca.\n•  Segure esse alongamento."
         },
         {
           fase: "Foco",
@@ -225,7 +290,7 @@
           fase: "Resistência",
           nome: "Puxada para Baixo com o Dedo",
           tempoMin: 1.5,
-          desc:  "•  Coloque o dedo indicador no lábio inferior. Pressione o lábio com o dedo e puxe para baixo.\n•  Resista a esse movimento levantando ativamente o lábio inferior para cima e afastando-o dos dentes usando os músculos faciais.\n•  Mantenha a resistência por 30 a 40 segundos. \n•  Atenção! Não é para esmagar o lábio contra os dentes."
+          desc: "•  Coloque o dedo indicador no lábio inferior. Pressione o lábio sobre os dentes inferiores e puxe para baixo.\n•  Resista a esse movimento levantando ativamente o lábio inferior para cima e afastando-o dos dentes usando os músculos faciais.\n•  Mantenha a resistência por 30 a 40 segundos. Descanse e repita."
         },
         {
           fase: "Velocidade / Queimação",
@@ -237,7 +302,7 @@
           fase: "Isolamento",
           nome: "O Abraço Interno de 'Mmm'",
           tempoMin: 2,
-          desc: "•  Mantenha os lábios fechados (fazendo 'mmm').\n•  Puxe os músculos dos lábios para dentro em direção aos dentes, como se estivessem pressionando os dentes pela frente.\n•  Mantenha os cantos da boca completamente neutros (sem sorrir ou fazer expressão de tristeza).\n•  Segure até sentir os músculos queimarem."
+          desc: "•  Mantenha os lábios fechados (fazendo 'mmm').\n•  Puxe os músculos dos lábios para dentro em direção ao centro, como se estivessem 'abraçando' os dentes.\n•  Mantenha os cantos da boca completamente neutros (sem sorrir ou fazer expressão de tristeza).\n•  Segure até sentir os músculos queimarem."
         }
       ]
     };
@@ -317,7 +382,7 @@
           mainBtn.textContent = "Concluído → Próximo";
           mainBtn.className = "btn btn-success";
         } else {
-          mainBtn.textContent = "Treino Finalizado";
+          mainBtn.textContent = "Treino Finalizado 🎉";
           mainBtn.className = "btn btn-success";
         }
       } else {
@@ -346,7 +411,7 @@
           if (currentIndex < list.length - 1) {
             nextExercise();
           } else {
-            loadExercise(0); 
+            showCelebration(); // <-- Chama a comemoração aqui
           }
           return;
         }
@@ -391,6 +456,38 @@
     function toggleDay() {
       currentDayMode = currentDayMode === "par" ? "impar" : "par";
       loadExercise(0);
+    }
+
+    // --- FUNÇÕES DE COMEMORAÇÃO ---
+    function showCelebration() {
+      document.getElementById("celebrationScreen").classList.add("active");
+      
+      // Arpejo de vitória (Dó, Mi, Sol, Dó agudo)
+      playBeep(523.25, 0.1); 
+      setTimeout(() => playBeep(659.25, 0.1), 100); 
+      setTimeout(() => playBeep(783.99, 0.15), 200); 
+      setTimeout(() => playBeep(1046.50, 0.4), 350); 
+      
+      if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 200]);
+
+      // Gera os confetes dinamicamente
+      const colors = ['#38bdf8', '#22c55e', '#ef4444', '#f59e0b', '#a855f7'];
+      for(let i = 0; i < 60; i++) {
+        const conf = document.createElement('div');
+        conf.className = 'confetti';
+        conf.style.left = Math.random() * 100 + 'vw';
+        conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        conf.style.animationDuration = (Math.random() * 2 + 2) + 's';
+        conf.style.animationDelay = (Math.random() * 0.5) + 's';
+        document.body.appendChild(conf);
+      }
+    }
+
+    function closeCelebration() {
+      document.getElementById("celebrationScreen").classList.remove("active");
+      // Limpa os confetes da tela para não pesar o navegador
+      document.querySelectorAll('.confetti').forEach(e => e.remove()); 
+      loadExercise(0); 
     }
 
     // Inicialização
